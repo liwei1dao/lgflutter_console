@@ -22,6 +22,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "autoBySystem": MessageLookupByLibrary.simpleMessage("自动")
+        "autoBySystem": MessageLookupByLibrary.simpleMessage("自动"),
+        "legoConsole": MessageLookupByLibrary.simpleMessage("Lego后台"),
+        "legoConsoleDes": MessageLookupByLibrary.simpleMessage("Lego后台描述")
       };
 }

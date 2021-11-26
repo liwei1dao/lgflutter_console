@@ -59,6 +59,26 @@ class S {
       args: [],
     );
   }
+
+  /// `LegoConsole`
+  String get legoConsole {
+    return Intl.message(
+      'LegoConsole',
+      name: 'legoConsole',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lego后台`
+  String get legoConsoleDes {
+    return Intl.message(
+      'Lego后台',
+      name: 'legoConsoleDes',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

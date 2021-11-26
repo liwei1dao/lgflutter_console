@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lgflutter_console/generated/l10n.dart';
 
 class SplashView extends StatefulWidget {
   final AnimationController animationController;
@@ -29,8 +30,58 @@ class _SplashViewState extends State<SplashView> {
           children: [
             SizedBox(
               width: MediaQuery.of(context).size.width,
-              height: 75,
-            )
+              child: Image.asset(
+                'assets/images/splash_bg.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+              child: Text(
+                S.of(context).legoConsole,
+                style: const TextStyle(
+                    fontSize: 25.0, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 64, right: 64),
+              child: Text(
+                S.of(context).legoConsoleDes,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(
+              height: 48,
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).padding.bottom + 16),
+              child: InkWell(
+                onTap: () {
+                  widget.animationController.animateTo(0.2);
+                },
+                child: Container(
+                  height: 58,
+                  padding: const EdgeInsets.only(
+                    left: 56.0,
+                    right: 56.0,
+                    top: 16,
+                    bottom: 16,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(38.0),
+                    color: const Color(0xff132137),
+                  ),
+                  child: const Text(
+                    "Let's begin",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

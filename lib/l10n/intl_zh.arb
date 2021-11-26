@@ -1,3 +1,5 @@
 {
-    "autoBySystem": "自动"
+    "autoBySystem": "自动",
+    "legoConsole":"Lego后台",
+    "legoConsoleDes":"Lego后台描述"
 }

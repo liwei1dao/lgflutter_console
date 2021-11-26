@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:lgflutter_console/models/core.dart';
 import 'package:provider/provider.dart';
 
 import 'managers/router_manger.dart';
+import 'managers/storage_manager.dart';
 import 'models/app_model.dart';
 
 void main() {
+  StorageManager.instance.init();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
-  get providers => null;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
           theme: appmodel.themeData(),
           darkTheme: appmodel.themeData(isdark: true),
           onGenerateRoute: RouterManager.generateRoute,
-          initialRoute: RouteName.splash,
+          initialRoute: RouteName.login,
         );
       }),
     );
