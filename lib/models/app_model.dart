@@ -13,9 +13,20 @@ class AppModel with ChangeNotifier {
   late int _themeindex;
   int get themeIndex => _themeindex;
 
+  /*服务地址*/
+  static const kServerAddr = 'kServerAddr';
+  late String _serverAddr;
+  String get serverAddr => _serverAddr;
+  /*服务地址*/
+  static const kServerSginKey = 'kServerSginKey';
+  late String _serverSginKey;
+  String get serverSginKey => _serverSginKey;
+
   AppModel() {
     _localeIndex = StorageManager.instance.getInteger(kLocaleIndex, 0);
     _themeindex = StorageManager.instance.getInteger(kThemeIndex, 0);
+    _serverAddr = StorageManager.instance.getString(kServerAddr, "");
+    _serverSginKey = StorageManager.instance.getString(kServerSginKey, "");
   }
 
   //切换语言
@@ -30,6 +41,18 @@ class AppModel with ChangeNotifier {
     _themeindex = index;
     notifyListeners();
     StorageManager.instance.saveInteger(kThemeIndex, index);
+  }
+
+  setserverAddr(String addr) {
+    _serverAddr = addr;
+    notifyListeners();
+    StorageManager.instance.saveString(kServerAddr, addr);
+  }
+
+  setserverSginKey(String sginkey) {
+    _serverSginKey = sginkey;
+    notifyListeners();
+    StorageManager.instance.saveString(kServerSginKey, sginkey);
   }
 
   themeData({bool isdark: false}) {

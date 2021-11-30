@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class Storage {
   late SharedPreferences _sharedPreferences;
+
   Future<void> init() async {
     _sharedPreferences = await SharedPreferences.getInstance();
   }
