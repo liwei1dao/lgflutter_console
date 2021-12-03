@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:lgflutter_console/generated/l10n.dart';
 
-class SplashView extends StatefulWidget {
+class Splash01View extends StatefulWidget {
   final AnimationController animationController;
-  const SplashView({Key? key, required this.animationController})
+  const Splash01View({Key? key, required this.animationController})
       : super(key: key);
 
   @override
-  _SplashViewState createState() => _SplashViewState();
+  _Splash01ViewState createState() => _Splash01ViewState();
 }
 
-class _SplashViewState extends State<SplashView> {
+class _Splash01ViewState extends State<Splash01View> {
   @override
   Widget build(BuildContext context) {
     final sceneOutAnim =
@@ -31,7 +31,7 @@ class _SplashViewState extends State<SplashView> {
             SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Image.asset(
-                'assets/images/splash_bg.png',
+                'assets/images/splash_01.png',
                 fit: BoxFit.cover,
               ),
             ),

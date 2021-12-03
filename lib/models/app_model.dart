@@ -4,9 +4,18 @@ import 'package:lgflutter_console/managers/storage_manager.dart';
 
 class AppModel with ChangeNotifier {
   /*国家化*/
+  static const localeValueList = ['', 'zh-CN', 'en'];
   static const kLocaleIndex = 'kLocaleIndex';
   late int _localeIndex;
   int get localeIndex => _localeIndex;
+  Locale? get locale {
+    if (_localeIndex > 0) {
+      var value = localeValueList[_localeIndex].split("-");
+      return Locale(value[0], value.length == 2 ? value[1] : '');
+    }
+    // 跟随系统
+    return null;
+  }
 
   /*主题*/
   static const kThemeIndex = 'kThemeIndex';

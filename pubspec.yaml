@@ -38,6 +38,7 @@ dependencies:
   provider: ^6.0.1
   dio: ^4.0.4
   connectivity: ^3.0.6
+  animations: ^2.0.2
 
 dev_dependencies:
   flutter_test:

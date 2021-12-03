@@ -54,14 +54,29 @@ class _LoginViewState extends State<LoginView> {
                       controller: _serverAddr,
                       autofocus: true,
                       decoration: const InputDecoration(
-                          hintText: "服务端地址",
-                          prefixIcon: Icon(Icons.add_reaction)),
+                        hintText: "邮件地址",
+                        prefixIcon: Icon(Icons.mail),
+                      ),
                     ),
                     TextField(
                       controller: _key,
                       autofocus: true,
                       decoration: const InputDecoration(
-                          hintText: "密钥", prefixIcon: Icon(Icons.add_reaction)),
+                          hintText: "密码", prefixIcon: Icon(Icons.password)),
+                    ),
+                    const SizedBox(
+                      height: 36,
+                    ),
+                    ElevatedButton(
+                      child: const Text(
+                        "登陆",
+                        style: TextStyle(
+                          fontSize: 26,
+                        ),
+                      ),
+                      onPressed: () {
+                        _login();
+                      },
                     ),
                   ],
                 ),
@@ -71,5 +86,11 @@ class _LoginViewState extends State<LoginView> {
         ),
       ),
     );
+  }
+
+  //登陆
+  _login() {
+    
+
   }
 }
