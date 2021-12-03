@@ -67,6 +67,7 @@ class _SettingViewState extends State<SettingView> {
                       ),
                       IconButton(
                         iconSize: 45,
+                        color: Colors.grey,
                         icon: const Icon(Icons.arrow_back),
                         onPressed: () {
                           widget.animationController.animateTo(0.0);

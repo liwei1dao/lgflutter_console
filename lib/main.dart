@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
             S.delegate,
           ],
           onGenerateRoute: RouterManager.generateRoute,
-          initialRoute: RouteName.splash,
+          initialRoute: RouteName.login,
         );
       }),
     );

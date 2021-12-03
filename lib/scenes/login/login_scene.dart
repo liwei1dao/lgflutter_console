@@ -30,7 +30,7 @@ class _LoginSceneState extends State<LoginScene> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
+      backgroundColor: const Color(0xffF7EBE1),
       body: ClipRRect(
         child: Stack(
           children: [

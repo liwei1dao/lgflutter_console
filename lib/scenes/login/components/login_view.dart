@@ -32,12 +32,12 @@ class _LoginViewState extends State<LoginView> {
           children: [
             SizedBox(
               width: MediaQuery.of(context).size.width,
-              height: 275,
+              height: 125,
             ),
             SizedBox(
-              width: 100,
+              width: 250,
               child: Image.asset(
-                'assets/images/lego.png',
+                'assets/images/login_01.png',
                 fit: BoxFit.cover,
               ),
             ),
@@ -67,21 +67,57 @@ class _LoginViewState extends State<LoginView> {
                     const SizedBox(
                       height: 36,
                     ),
-                    ElevatedButton(
-                      child: const Text(
-                        "登陆",
-                        style: TextStyle(
-                          fontSize: 26,
+                    Container(
+                      height: 36,
+                      width: 250,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        color: const Color(0xff132137),
+                      ),
+                      child: InkWell(
+                        onTap: _login,
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(left: 16.0, right: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [
+                              Text(
+                                'Sign Up',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Icon(Icons.arrow_forward_rounded,
+                                  color: Colors.white),
+                            ],
+                          ),
                         ),
                       ),
-                      onPressed: () {
-                        _login();
-                      },
                     ),
                   ],
                 ),
               ),
             ),
+            Padding(
+              padding: EdgeInsets.only(
+                  bottom: 16 + MediaQuery.of(context).padding.bottom),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    iconSize: 45,
+                    color: Colors.grey,
+                    icon: const Icon(Icons.settings),
+                    onPressed: () {
+                      widget.animationController.animateTo(0.2);
+                    },
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),
@@ -89,8 +125,5 @@ class _LoginViewState extends State<LoginView> {
   }
 
   //登陆
-  _login() {
-    
-
-  }
+  _login() {}
 }
