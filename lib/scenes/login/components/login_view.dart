@@ -82,6 +82,9 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                   ),
+                  const SizedBox(
+                    height: 15,
+                  ),
                   TextButton(
                     child: const Text("to register"),
                     onPressed: () {
@@ -93,7 +96,7 @@ class _LoginViewState extends State<LoginView> {
             ),
           ),
           const SizedBox(
-            height: 125,
+            height: 75,
           ),
           Padding(
             padding:

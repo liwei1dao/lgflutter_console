@@ -43,6 +43,9 @@ class _RegisterViewState extends State<RegisterView> {
                     prefixIcon: Icon(Icons.mail),
                   ),
                 ),
+                const SizedBox(
+                  height: 25,
+                ),
                 Row(
                   children: [
                     Expanded(
@@ -52,24 +55,35 @@ class _RegisterViewState extends State<RegisterView> {
                         autofocus: true,
                         decoration: const InputDecoration(
                           hintText: "验证码",
-                          prefixIcon: Icon(Icons.mail),
-                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.verified),
                         ),
                       ),
                     ),
                     Expanded(
-                      flex: 2,
-                      child: ElevatedButton(
-                        child: const Text(
-                          "获取验证码",
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                        onPressed: () {},
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {},
+                        child: Container(
+                            padding: const EdgeInsets.all(5.0),
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(3.0),
+                            ),
+                            child: const Text(
+                              '获取验证码',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )),
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(
+                  height: 15,
                 ),
                 TextButton(
                   child: const Text("to login"),
