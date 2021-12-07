@@ -1,9 +1,9 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lgflutter_console/models/app_model.dart';
-import 'package:provider/provider.dart';
 
 import 'components/login_view.dart';
+import 'components/register_view.dart';
 import 'components/setting_view.dart';
 
 class LoginScene extends StatefulWidget {
@@ -14,35 +14,51 @@ class LoginScene extends StatefulWidget {
 }
 
 class _LoginSceneState extends State<LoginScene> with TickerProviderStateMixin {
-  late AnimationController _animationController;
+  late int _currentIndex = 2;
   @override
   void initState() {
-    _animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 4));
-    if (context.read<AppModel>().serverAddr == "") {
-      _animationController.animateTo(0.2);
-    } else {
-      _animationController.animateTo(0.0);
-    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> appPagelist = [
+      LoginView(
+        switchPage: setcurrentIndex,
+      ),
+      RegisterView(
+        switchPage: setcurrentIndex,
+      ),
+      SettingView(
+        switchPage: setcurrentIndex,
+      ),
+    ];
     return Scaffold(
       backgroundColor: const Color(0xffF7EBE1),
       body: ClipRRect(
-        child: Stack(
-          children: [
-            LoginView(
-              animationController: _animationController,
-            ),
-            SettingView(
-              animationController: _animationController,
-            ),
-          ],
+        child: PageTransitionSwitcher(
+          transitionBuilder: (
+            Widget child,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) {
+            return SharedAxisTransition(
+              fillColor: Colors.transparent,
+              child: child,
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.vertical,
+            );
+          },
+          child: appPagelist[_currentIndex],
         ),
       ),
     );
+  }
+
+  void setcurrentIndex(int _cIndex) {
+    setState(() {
+      _currentIndex = _cIndex;
+    });
   }
 }
