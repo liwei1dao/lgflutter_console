@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lgflutter_console/models/core.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 import 'generated/l10n.dart';
@@ -10,7 +11,7 @@ import 'models/app_model.dart';
 
 void main() {
   StorageManager.instance.init();
-  DioManager.instance.init(baseUrl: "http://2.56.241.72:8080");
+  DioManager.instance.init(baseUrl: "http://127.0.0.1:9567/lego");
   runApp(const MyApp());
 }
 
@@ -19,7 +20,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    return OKToast(
+        child: MultiProvider(
       providers: providers,
       child: Consumer<AppModel>(builder: (context, appmodel, child) {
         return MaterialApp(
@@ -34,6 +36,6 @@ class MyApp extends StatelessWidget {
           initialRoute: RouteName.login,
         );
       }),
-    );
+    ));
   }
 }

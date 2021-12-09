@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:lgflutter_console/api/api.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key, required this.switchPage}) : super(key: key);
@@ -10,6 +13,15 @@ class RegisterView extends StatefulWidget {
 class _RegisterViewState extends State<RegisterView> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _verification = TextEditingController();
+  late int lefttime = 0;
+  late Timer _timer;
+
+  @override
+  void initState() {
+    lefttime = 0;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -62,17 +74,31 @@ class _RegisterViewState extends State<RegisterView> {
                     Expanded(
                       flex: 1,
                       child: InkWell(
-                        onTap: () {},
+                        onTap: lefttime > 0
+                            ? null
+                            : () {
+                                Api.verificationReq(
+                                  {
+                                    "PhonOrEmail": _email.text,
+                                    "CaptchaType": 0
+                                  },
+                                ).then(
+                                  (data) => {
+                                    if (data.code == 0) {_startverlefttimer()}
+                                  },
+                                );
+                              },
                         child: Container(
                             padding: const EdgeInsets.all(5.0),
                             decoration: BoxDecoration(
-                              color: Colors.black,
+                              color:
+                                  lefttime > 0 ? Colors.blue[100] : Colors.blue,
                               borderRadius: BorderRadius.circular(3.0),
                             ),
-                            child: const Text(
-                              '获取验证码',
+                            child: Text(
+                              lefttime > 0 ? lefttime.toString() : '获取验证码',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
@@ -97,5 +123,22 @@ class _RegisterViewState extends State<RegisterView> {
         ),
       ],
     ));
+  }
+
+  ///启动验证码 倒计时
+  _startverlefttimer() {
+    lefttime = 60;
+
+    ///间隔1秒
+    _timer = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
+      ///自增
+      lefttime--;
+
+      ///到5秒后停止
+      if (lefttime <= 0) {
+        _timer.cancel();
+      }
+      setState(() {});
+    });
   }
 }
