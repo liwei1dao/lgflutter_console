@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:lgflutter_console/api/api.dart';
+import 'package:lgflutter_console/managers/router_manger.dart';
+import 'package:oktoast/oktoast.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key, required this.switchPage}) : super(key: key);
@@ -61,7 +64,20 @@ class _LoginViewState extends State<LoginView> {
                       color: const Color(0xff132137),
                     ),
                     child: InkWell(
-                      onTap: _login,
+                      onTap: () {
+                        Api.registerByCaptchaReq(
+                          {
+                            "PhonOrEmail": _email.text,
+                            "Password": _password.text,
+                          },
+                        ).then(
+                          (data) => {
+                            showToast(data.message!),
+                            Navigator.of(context)
+                                .pushReplacementNamed(RouteName.home),
+                          },
+                        );
+                      },
                       child: Padding(
                         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
                         child: Row(
@@ -114,7 +130,4 @@ class _LoginViewState extends State<LoginView> {
       ),
     );
   }
-
-  //登陆
-  _login() {}
 }

@@ -11,7 +11,7 @@ import 'models/app_model.dart';
 
 void main() {
   StorageManager.instance.init();
-  DioManager.instance.init(baseUrl: "http://127.0.0.1:9567/lego");
+  DioManager.instance.init(baseUrl: "http://127.0.0.1:9567");
   runApp(const MyApp());
 }
 

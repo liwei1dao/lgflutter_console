@@ -1,5 +1,4 @@
 import 'package:animations/animations.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'components/login_view.dart';
@@ -37,6 +36,7 @@ class _LoginSceneState extends State<LoginScene> with TickerProviderStateMixin {
       backgroundColor: const Color(0xffF7EBE1),
       body: ClipRRect(
         child: PageTransitionSwitcher(
+          duration: const Duration(milliseconds: 500),
           transitionBuilder: (
             Widget child,
             Animation<double> animation,

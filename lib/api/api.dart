@@ -1,7 +1,3 @@
-import 'package:dio/dio.dart';
-import 'dart:convert';
-import 'package:convert/convert.dart';
-import 'package:crypto/crypto.dart';
 import 'package:lgflutter_console/managers/dio_manager.dart';
 
 class ApiResult {
@@ -16,10 +12,53 @@ class ApiResult {
 }
 
 class Api {
-  ///请求验证码
+  ///验证码请求
   static Future<ApiResult> verificationReq(Map<String, dynamic>? params) async {
+    final response = await DioManager.instance
+        .post("/lego/api/sendemailcaptcha", data: params);
+    var data = ApiResult.fromJson(response);
+    return data;
+  }
+
+  ///注册请求
+  static Future<ApiResult> registerByCaptchaReq(
+      Map<String, dynamic>? params) async {
+    final response = await DioManager.instance
+        .post("/lego/user/registerbycaptcha", data: params);
+    var data = ApiResult.fromJson(response);
+    return data;
+  }
+
+  ///登陆请求 验证码
+  static Future<ApiResult> loginByCaptchaReq(
+      Map<String, dynamic>? params) async {
+    final response = await DioManager.instance
+        .post("/lego/user/loginbycaptcha", data: params);
+    var data = ApiResult.fromJson(response);
+    return data;
+  }
+
+  ///登陆请求 密码
+  static Future<ApiResult> loginByPasswordReq(
+      Map<String, dynamic>? params) async {
+    final response = await DioManager.instance
+        .post("/lego/user/loginbypassword", data: params);
+    var data = ApiResult.fromJson(response);
+    return data;
+  }
+
+  ///获取用户信息
+  static Future<ApiResult> getUserinfoReq(Map<String, dynamic>? params) async {
     final response =
-        await DioManager.instance.post("/api/sendemailcaptcha", data: params);
+        await DioManager.instance.post("/lego/user/getuserinfo", data: params);
+    var data = ApiResult.fromJson(response);
+    return data;
+  }
+
+  ///登出
+  static Future<ApiResult> loginOutReq(Map<String, dynamic>? params) async {
+    final response =
+        await DioManager.instance.post("/lego/user/loginout", data: params);
     var data = ApiResult.fromJson(response);
     return data;
   }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:lgflutter_console/api/api.dart';
+import 'package:oktoast/oktoast.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key, required this.switchPage}) : super(key: key);
@@ -13,6 +14,8 @@ class RegisterView extends StatefulWidget {
 class _RegisterViewState extends State<RegisterView> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _verification = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+  final TextEditingController _confirmpassword = TextEditingController();
   late int lefttime = 0;
   late Timer _timer;
 
@@ -107,6 +110,70 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                TextField(
+                  controller: _password,
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    hintText: "密码",
+                    prefixIcon: Icon(Icons.mail),
+                  ),
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                TextField(
+                  controller: _confirmpassword,
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    hintText: "确认密码",
+                    prefixIcon: Icon(Icons.mail),
+                  ),
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                Container(
+                  height: 36,
+                  width: 250,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    color: const Color(0xff132137),
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      Api.registerByCaptchaReq(
+                        {
+                          "PhonOrEmail": _email.text,
+                          "Password": _password.text,
+                          "Captcha": _verification.text,
+                        },
+                      ).then(
+                        (data) => {showToast(data.message!)},
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text(
+                            '注册账号',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Icon(Icons.arrow_forward_rounded,
+                              color: Colors.white),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(
                   height: 15,

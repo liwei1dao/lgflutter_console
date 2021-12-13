@@ -224,6 +224,8 @@ class RequestInterceptor extends Interceptor {
   onRequest(options, handle) {
     debugPrint(
         '======================\n*** Request *** \nData:\n ${options.data.toString()} \nQuery:\n ${options.queryParameters.toString()} \n======================');
+    String token = StorageManager.instance.getString('User-Token');
+    options.headers['X-Token'] = token;
     options.data['Sign'] = _getSign(options.data);
     handle.next(options);
   }
