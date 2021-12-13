@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lgflutter_console/managers/storage_manager.dart';
 
 class UserData {
   int? id;
@@ -21,10 +22,16 @@ class UserData {
 
 ///用户数据模块
 class UserModel with ChangeNotifier {
+  //用户Token
+  static const kUserToken = 'kUserToken';
+  late String _kUserToken;
+  String get themeIndex => _kUserToken;
+
   UserData? _userData;
   UserData? get userData => _userData;
 
   setuserData(UserData _userData) {
     _userData = _userData;
+    StorageManager.instance.saveString(kUserToken, _userData.token!);
   }
 }

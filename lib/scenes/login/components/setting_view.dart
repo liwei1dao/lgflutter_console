@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lgflutter_console/managers/dio_manager.dart';
 import 'package:lgflutter_console/models/app_model.dart';
 import 'package:provider/provider.dart';
 
@@ -71,6 +72,7 @@ class _SettingViewState extends State<SettingView> {
                       color: Colors.grey,
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () {
+                        DioManager.instance.init(baseUrl: appmodel.serverAddr);
                         widget.switchPage(0);
                       },
                     )

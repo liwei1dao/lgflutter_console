@@ -33,8 +33,10 @@ class AppModel with ChangeNotifier {
   AppModel() {
     _localeIndex = StorageManager.instance.getInteger(kLocaleIndex, 0);
     _themeindex = StorageManager.instance.getInteger(kThemeIndex, 0);
-    _serverAddr = StorageManager.instance.getString(kServerAddr, "");
-    _serverSginKey = StorageManager.instance.getString(kServerSginKey, "");
+    _serverAddr =
+        StorageManager.instance.getString(kServerAddr, "http://127.0.0.1:9567");
+    _serverSginKey = StorageManager.instance
+        .getString(kServerSginKey, "@234%67g12q4*67m12#4l67!");
   }
 
   //切换语言
@@ -63,7 +65,7 @@ class AppModel with ChangeNotifier {
     StorageManager.instance.saveString(kServerSginKey, sginkey);
   }
 
-  themeData({bool isdark: false}) {
+  themeData({bool isdark = false}) {
     late Color _primaryColor;
     switch (_themeindex) {
       case 0:

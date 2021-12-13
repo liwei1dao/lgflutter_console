@@ -6,23 +6,24 @@ import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lgflutter_console/managers/storage_manager.dart';
+import 'package:lgflutter_console/models/app_model.dart';
 import 'package:oktoast/oktoast.dart';
 
-const signKey = "@234%67g12q4*67m12#4l67!";
+String signKey = "";
 // 是否启用代理
-const proxyEnable = false;
+const bool proxyEnable = false;
 
 /// 代理服务IP
-const proxyIp = '192.168.2.237';
+const String proxyIp = '192.168.2.237';
 
 /// 代理服务端口
-const proxyPort = 8888;
+const int proxyPort = 8888;
 // 是否启用缓存
-const cacheEnable = true;
+const bool cacheEnable = true;
 // 缓存的最长时间，单位（秒）
-const cacheMaxage = 1000;
+const int cacheMaxage = 1000;
 // 最大缓存数
-const cacheMaxcount = 100;
+const int cacheMaxcount = 100;
 
 class DioManager {
   static DioManager? _instance;
@@ -85,6 +86,7 @@ class DioManager {
     if (interceptors != null && interceptors.isNotEmpty) {
       _dio.interceptors.addAll(interceptors);
     }
+    signKey = StorageManager.instance.getString(AppModel.kServerSginKey);
   }
 
   /// 设置headers

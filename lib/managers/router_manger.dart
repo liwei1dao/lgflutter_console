@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lgflutter_console/scenes/home/home_scene.dart';
 import 'package:lgflutter_console/scenes/login/login_scene.dart';
 import 'package:lgflutter_console/scenes/splash/splash_scene.dart';
 
@@ -16,6 +17,8 @@ class RouterManager {
         return NoAnimRouteBuilder(const SplashScene());
       case RouteName.login:
         return NoAnimRouteBuilder(const LoginScene());
+      case RouteName.home:
+        return NoAnimRouteBuilder(const HomeScene());
       default:
         return CupertinoPageRoute(
             builder: (_) => Scaffold(
