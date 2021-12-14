@@ -9,8 +9,8 @@ import 'managers/router_manger.dart';
 import 'managers/storage_manager.dart';
 import 'models/app_model.dart';
 
-void main() {
-  StorageManager.instance.init();
+Future<void> main() async {
+  await StorageManager.instance.init();
   DioManager.instance.init(baseUrl: "http://127.0.0.1:9567");
   runApp(const MyApp());
 }
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
             S.delegate,
           ],
           onGenerateRoute: RouterManager.generateRoute,
-          initialRoute: RouteName.login,
+          initialRoute: RouteName.home,
         );
       }),
     ));

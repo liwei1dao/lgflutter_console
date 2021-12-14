@@ -86,7 +86,8 @@ class DioManager {
     if (interceptors != null && interceptors.isNotEmpty) {
       _dio.interceptors.addAll(interceptors);
     }
-    signKey = StorageManager.instance.getString(AppModel.kServerSginKey);
+    signKey = StorageManager.instance
+        .getString(AppModel.kServerSginKey, "@234%67g12q4*67m12#4l67!");
   }
 
   /// 设置headers
@@ -241,7 +242,8 @@ class RequestInterceptor extends Interceptor {
 
   @override
   onError(err, handle) {
-    showToast(err.response?.data['message']);
+    // showToast(err.error);
+    debugPrint('======================\n*** onError *** \n${err.toString()}');
     return super.onError(err, handle);
   }
 

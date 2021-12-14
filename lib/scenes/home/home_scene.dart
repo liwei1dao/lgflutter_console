@@ -7,6 +7,22 @@ enum DrawerIndex {
   home,
 }
 
+class DrawerList {
+  DrawerList({
+    this.isAssetsImage = false,
+    this.labelName = '',
+    this.icon,
+    this.index,
+    this.imageName = '',
+  });
+
+  String labelName;
+  Icon? icon;
+  bool isAssetsImage;
+  String imageName;
+  DrawerIndex? index;
+}
+
 class HomeScene extends StatefulWidget {
   const HomeScene({
     Key? key,
