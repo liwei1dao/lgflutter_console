@@ -9,7 +9,7 @@ import 'package:lgflutter_console/managers/storage_manager.dart';
 import 'package:lgflutter_console/models/app_model.dart';
 import 'package:oktoast/oktoast.dart';
 
-String signKey = "";
+String _signKey = "";
 // 是否启用代理
 const bool proxyEnable = false;
 
@@ -74,7 +74,8 @@ class DioManager {
   }
   void init(
       //这个在main或者初始化的时候先调用一下
-      {String? baseUrl,
+      {required String baseUrl,
+      required String signKey,
       int? connectTimeout,
       int? receiveTimeout,
       List<Interceptor>? interceptors}) {
@@ -86,8 +87,7 @@ class DioManager {
     if (interceptors != null && interceptors.isNotEmpty) {
       _dio.interceptors.addAll(interceptors);
     }
-    signKey = StorageManager.instance
-        .getString(AppModel.kServerSginKey, "@234%67g12q4*67m12#4l67!");
+    _signKey = signKey;
   }
 
   /// 设置headers
@@ -227,7 +227,7 @@ class RequestInterceptor extends Interceptor {
   onRequest(options, handle) {
     debugPrint(
         '======================\n*** Request *** \nData:\n ${options.data.toString()} \nQuery:\n ${options.queryParameters.toString()} \n======================');
-    String token = StorageManager.instance.getString('User-Token');
+    String token = StorageManager.instance.getString('User-Token', "null");
     options.headers['X-Token'] = token;
     options.data['Sign'] = _getSign(options.data);
     handle.next(options);
@@ -260,7 +260,8 @@ class RequestInterceptor extends Interceptor {
     String pairsString = allKeys.join("");
 
     /// 拼接 ABC 是你的秘钥
-    String sign = pairsString + 'key=' + signKey;
+    String sign = pairsString + 'key=' + _signKey;
+    debugPrint("sign:" + sign);
     var content = const Utf8Encoder().convert(sign);
     var digest = md5.convert(content);
     return hex.encode(digest.bytes).toLowerCase();

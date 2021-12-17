@@ -72,7 +72,9 @@ class _SettingViewState extends State<SettingView> {
                       color: Colors.grey,
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () {
-                        DioManager.instance.init(baseUrl: appmodel.serverAddr);
+                        DioManager.instance.init(
+                            baseUrl: appmodel.serverAddr,
+                            signKey: appmodel.serverSginKey);
                         widget.switchPage(0);
                       },
                     )

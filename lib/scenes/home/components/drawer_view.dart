@@ -20,6 +20,23 @@ class HomeDrawer extends StatefulWidget {
 
 class _HomeDrawerState extends State<HomeDrawer> {
   List<DrawerList>? drawerList;
+
+  @override
+  void initState() {
+    setDrawerListArray();
+    super.initState();
+  }
+
+  void setDrawerListArray() {
+    drawerList = <DrawerList>[
+      DrawerList(
+        index: DrawerIndex.home,
+        labelName: 'Home',
+        icon: const Icon(Icons.home),
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -13,7 +13,7 @@ class LoginScene extends StatefulWidget {
 }
 
 class _LoginSceneState extends State<LoginScene> with TickerProviderStateMixin {
-  late int _currentIndex = 2;
+  late int _currentIndex = 0;
   @override
   void initState() {
     super.initState();
