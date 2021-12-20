@@ -13,52 +13,61 @@ class LoginScene extends StatefulWidget {
 }
 
 class _LoginSceneState extends State<LoginScene> with TickerProviderStateMixin {
-  late int _currentIndex = 0;
+  late AnimationController _loginController;
+  late AnimationController _registerController;
+  late AnimationController _settingController;
   @override
   void initState() {
+    _loginController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300));
+    _loginController.animateTo(1.0);
+    _registerController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300));
+    _registerController.animateTo(0.0);
+    _settingController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300));
+    _settingController.animateTo(0.0);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> appPagelist = [
-      LoginView(
-        switchPage: setcurrentIndex,
-      ),
-      RegisterView(
-        switchPage: setcurrentIndex,
-      ),
-      SettingView(
-        switchPage: setcurrentIndex,
-      ),
-    ];
     return Scaffold(
       backgroundColor: const Color(0xffF7EBE1),
       body: ClipRRect(
-        child: PageTransitionSwitcher(
-          duration: const Duration(milliseconds: 500),
-          transitionBuilder: (
-            Widget child,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-          ) {
-            return SharedAxisTransition(
-              fillColor: Colors.transparent,
-              child: child,
-              animation: animation,
-              secondaryAnimation: secondaryAnimation,
-              transitionType: SharedAxisTransitionType.vertical,
-            );
-          },
-          child: appPagelist[_currentIndex],
+        child: Stack(
+          children: [
+            LoginView(
+              animationController: _loginController,
+              switchPage: setcurrentIndex,
+            ),
+            RegisterView(
+              animationController: _registerController,
+              switchPage: setcurrentIndex,
+            ),
+            SettingView(
+              animationController: _settingController,
+              switchPage: setcurrentIndex,
+            ),
+          ],
         ),
       ),
     );
   }
 
   void setcurrentIndex(int _cIndex) {
-    setState(() {
-      _currentIndex = _cIndex;
-    });
+    if (_cIndex == 0) {
+      _loginController.animateTo(1.0);
+      _registerController.animateTo(0.0);
+      _settingController.animateTo(0.0);
+    } else if (_cIndex == 1) {
+      _loginController.animateTo(0.0);
+      _registerController.animateTo(1.0);
+      _settingController.animateTo(0.0);
+    } else {
+      _loginController.animateTo(0.0);
+      _registerController.animateTo(0.0);
+      _settingController.animateTo(1.0);
+    }
   }
 }
