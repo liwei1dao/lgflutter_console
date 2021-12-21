@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lgflutter_console/api/api.dart';
 import 'package:lgflutter_console/generated/l10n.dart';
 import 'package:lgflutter_console/managers/router_manger.dart';
@@ -36,10 +37,18 @@ class _Splash01ViewState extends State<Splash01View> {
           children: [
             SizedBox(
               width: MediaQuery.of(context).size.width,
-              child: Image.asset(
-                'assets/images/splash_01.png',
-                fit: BoxFit.cover,
+              height: 175,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: SvgPicture.asset(
+                "assets/images/splash_01.svg",
+                width: 250,
               ),
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: 25,
             ),
             Padding(
               padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
