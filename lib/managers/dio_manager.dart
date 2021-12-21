@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:connectivity/connectivity.dart';
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lgflutter_console/managers/storage_manager.dart';
-import 'package:lgflutter_console/models/app_model.dart';
-import 'package:oktoast/oktoast.dart';
 
 String _signKey = "";
 // 是否启用代理
@@ -221,30 +220,171 @@ class DioManager {
   }
 }
 
+/// 自定义异常
+class AppException implements Exception {
+  final String _message;
+  final int _code;
+
+  AppException(
+    this._code,
+    this._message,
+  );
+
+  @override
+  String toString() {
+    return "$_code$_message";
+  }
+
+  String getMessage() {
+    return _message;
+  }
+
+  factory AppException.create(DioError error) {
+    switch (error.type) {
+      case DioErrorType.cancel:
+        {
+          return BadRequestException(-1, "请求取消");
+        }
+      case DioErrorType.connectTimeout:
+        {
+          return BadRequestException(-1, "连接超时");
+        }
+      case DioErrorType.sendTimeout:
+        {
+          return BadRequestException(-1, "请求超时");
+        }
+      case DioErrorType.receiveTimeout:
+        {
+          return BadRequestException(-1, "响应超时");
+        }
+      case DioErrorType.response:
+        {
+          try {
+            int? errCode = error.response!.statusCode;
+            // String errMsg = error.response.statusMessage;
+            // return ErrorEntity(code: errCode, message: errMsg);
+            switch (errCode) {
+              case 400:
+                {
+                  return BadRequestException(errCode!, "请求语法错误");
+                }
+              case 401:
+                {
+                  return UnauthorisedException(errCode!, "没有权限");
+                }
+              case 403:
+                {
+                  return UnauthorisedException(errCode!, "服务器拒绝执行");
+                }
+              case 404:
+                {
+                  return UnauthorisedException(errCode!, "无法连接服务器");
+                }
+              case 405:
+                {
+                  return UnauthorisedException(errCode!, "请求方法被禁止");
+                }
+              case 500:
+                {
+                  return UnauthorisedException(errCode!, "服务器内部错误");
+                }
+              case 502:
+                {
+                  return UnauthorisedException(errCode!, "无效的请求");
+                }
+              case 503:
+                {
+                  return UnauthorisedException(errCode!, "服务器挂了");
+                }
+              case 505:
+                {
+                  return UnauthorisedException(errCode!, "不支持HTTP协议请求");
+                }
+              default:
+                {
+                  // return ErrorEntity(code: errCode, message: "未知错误");
+                  return AppException(errCode!, error.response!.statusMessage!);
+                }
+            }
+          } on Exception catch (_) {
+            return AppException(-1, "未知错误");
+          }
+        }
+      default:
+        {
+          return AppException(-1, error.error.message);
+        }
+    }
+  }
+}
+
+/// 请求错误
+class BadRequestException extends AppException {
+  BadRequestException(int code, String message) : super(code, message);
+}
+
+/// 未认证异常
+class UnauthorisedException extends AppException {
+  UnauthorisedException(int code, String message) : super(code, message);
+}
+
+class MyDioSocketException extends SocketException {
+  @override
+  late String message;
+
+  MyDioSocketException(
+    message, {
+    osError,
+    address,
+    port,
+  }) : super(
+          message,
+          osError: osError,
+          address: address,
+          port: port,
+        );
+}
+
+/// 错误处理拦截器
+class ErrorInterceptor extends Interceptor {
+  // 是否有网
+  Future<bool> isConnected() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    return connectivityResult != ConnectivityResult.none;
+  }
+
+  @override
+  Future<void> onError(DioError err, ErrorInterceptorHandler errCb) async {
+    // 自定义一个socket实例，因为dio原生的实例，message属于是只读的
+    if (err.error is SocketException) {
+      err.error = MyDioSocketException(
+        err.message,
+        osError: err.error?.osError,
+        address: err.error?.address,
+        port: err.error?.port,
+      );
+    }
+    if (err.type == DioErrorType.other) {
+      bool isConnectNetWork = await isConnected();
+      if (!isConnectNetWork && err.error is MyDioSocketException) {
+        err.error.message = "当前网络不可用，请检查您的网络";
+      }
+    }
+    // error统一处理
+    AppException appException = AppException.create(err);
+    // 错误提示
+    debugPrint('DioError===: ${appException.toString()}');
+    err.error = appException;
+    return super.onError(err, errCb);
+  }
+}
+
 /// 请求处理拦截器
 class RequestInterceptor extends Interceptor {
-  @override
-  onRequest(options, handle) {
-    debugPrint(
-        '======================\n*** Request *** \nData:\n ${options.data.toString()} \nQuery:\n ${options.queryParameters.toString()} \n======================');
-    String token = StorageManager.instance.getString('User-Token', "null");
-    options.headers['X-Token'] = token;
-    options.data['Sign'] = _getSign(options.data);
-    handle.next(options);
-  }
-
-  @override
-  onResponse(response, handle) {
-    debugPrint(
-        '======================\n*** Response *** \n${response.toString()}');
-    return super.onResponse(response, handle);
-  }
-
-  @override
-  onError(err, handle) {
-    // showToast(err.error);
-    debugPrint('======================\n*** onError *** \n${err.toString()}');
-    return super.onError(err, handle);
+  // 是否有网
+  Future<bool> _isConnected() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    return connectivityResult != ConnectivityResult.none;
   }
 
   ///签名
@@ -265,6 +405,49 @@ class RequestInterceptor extends Interceptor {
     var content = const Utf8Encoder().convert(sign);
     var digest = md5.convert(content);
     return hex.encode(digest.bytes).toLowerCase();
+  }
+
+  @override
+  // ignore: avoid_renaming_method_parameters
+  onRequest(options, handle) {
+    debugPrint(
+        '======================\n*** Request *** \nData:\n ${options.data.toString()} \nQuery:\n ${options.queryParameters.toString()} \n======================');
+    String token = StorageManager.instance.getString('User-Token', "null");
+    options.headers['X-Token'] = token;
+    options.data['Sign'] = _getSign(options.data);
+    handle.next(options);
+  }
+
+  @override
+  // ignore: avoid_renaming_method_parameters
+  onResponse(response, handle) {
+    debugPrint(
+        '======================\n*** Response *** \n${response.toString()}');
+    return super.onResponse(response, handle);
+  }
+
+  @override
+  // ignore: avoid_renaming_method_parameters
+  onError(err, handle) async {
+    if (err.error is SocketException) {
+      err.error = MyDioSocketException(
+        err.message,
+        osError: err.error?.osError,
+        address: err.error?.address,
+        port: err.error?.port,
+      );
+    }
+    if (err.type == DioErrorType.other) {
+      bool isConnectNetWork = await _isConnected();
+      if (!isConnectNetWork && err.error is MyDioSocketException) {
+        err.error.message = "当前网络不可用，请检查您的网络";
+      }
+    }
+    AppException appException = AppException.create(err);
+    // 错误提示
+    debugPrint('DioError===: ${appException.toString()}');
+    err.error = appException;
+    return super.onError(err, handle);
   }
 }
 

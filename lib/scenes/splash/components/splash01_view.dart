@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:lgflutter_console/api/api.dart';
 import 'package:lgflutter_console/generated/l10n.dart';
+import 'package:lgflutter_console/managers/router_manger.dart';
+import 'package:lgflutter_console/managers/storage_manager.dart';
+import 'package:lgflutter_console/models/user_model.dart';
+import 'package:oktoast/oktoast.dart';
+import 'package:provider/provider.dart';
 
 class Splash01View extends StatefulWidget {
   final AnimationController animationController;
@@ -56,32 +62,54 @@ class _Splash01ViewState extends State<Splash01View> {
             Padding(
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).padding.bottom + 16),
-              child: InkWell(
-                onTap: () {
-                  widget.animationController.animateTo(0.2);
-                },
-                child: Container(
-                  height: 58,
-                  padding: const EdgeInsets.only(
-                    left: 56.0,
-                    right: 56.0,
-                    top: 16,
-                    bottom: 16,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(38.0),
-                    color: const Color(0xff132137),
-                  ),
-                  child: const Text(
-                    "Let's begin",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
+              child: Consumer<UserModel>(
+                builder: (context, usermodel, child) {
+                  return InkWell(
+                    onTap: () {
+                      if (StorageManager.instance
+                              .getString(UserModel.kUserToken, "null") ==
+                          "null") {
+                        widget.animationController.animateTo(0.2);
+                      } else {
+                        Api.getUserinfoReq({})
+                            .then(
+                              (data) => {
+                                showToast(data.message!),
+                                usermodel
+                                    .setuserData(UserData.fromJson(data.data)),
+                                Navigator.of(context)
+                                    .pushReplacementNamed(RouteName.home),
+                              },
+                            )
+                            .onError((error, stackTrace) => {
+                                  widget.animationController.animateTo(0.2),
+                                });
+                      }
+                    },
+                    child: Container(
+                      height: 58,
+                      padding: const EdgeInsets.only(
+                        left: 56.0,
+                        right: 56.0,
+                        top: 16,
+                        bottom: 16,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(38.0),
+                        color: const Color(0xff132137),
+                      ),
+                      child: const Text(
+                        "Let's begin",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
-            ),
+            )
           ],
         ),
       ),

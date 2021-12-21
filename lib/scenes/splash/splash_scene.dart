@@ -74,7 +74,7 @@ class _SplashSceneState extends State<SplashScene>
 
   void _onSkipClick() {
     _animationController.animateTo(0.8,
-        duration: const Duration(milliseconds: 1200));
+        duration: const Duration(milliseconds: 500));
   }
 
   void _onBackClick() {

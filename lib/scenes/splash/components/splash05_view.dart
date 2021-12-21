@@ -40,8 +40,9 @@ class _Splash05ViewState extends State<Splash05View> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(
-                height: 75,
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 175,
               ),
               SizedBox(
                 width: 250,

@@ -82,7 +82,7 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         child: InkWell(
                           onTap: () {
-                            Api.registerByCaptchaReq(
+                            Api.loginByPasswordReq(
                               {
                                 "PhonOrEmail": _email.text,
                                 "Password": _password.text,
