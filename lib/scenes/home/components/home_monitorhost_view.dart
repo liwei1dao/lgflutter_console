@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lgflutter_console/apptheme.dart';
 
@@ -22,57 +22,56 @@ class _HomeMonitorhostViewState extends State<HomeMonitorhostView> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-        animation: widget.animationController!,
-        builder: (BuildContext context, Widget? child) {
-          return FadeTransition(
-            opacity: viewanimation!,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 450,
-                  color: const Color(0xffF7EBE1),
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: SvgPicture.asset(
-                            "assets/images/home_001.svg",
-                            height: 300,
-                          ),
-                        ),
+    return Container(
+      color: AppTheme.nearlyWhite,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 450,
+              color: const Color(0xffF7EBE1),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: SvgPicture.asset(
+                        "assets/images/home_001.svg",
+                        height: 300,
                       ),
-                      Center(
-                        heightFactor: 5,
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            maxWidth: 650,
-                          ),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: const EdgeInsets.only(left: 32),
-                            child: const Text(
-                              "Monitor",
-                              style: TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-                const Expanded(
-                  child: SizedBox(),
-                ),
-              ],
+                  Center(
+                    heightFactor: 5,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxWidth: 650,
+                      ),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.only(left: 32),
+                        child: const Text(
+                          "Host Monitor",
+                          style: TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          );
-        });
+            const Expanded(
+              child: SizedBox(),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

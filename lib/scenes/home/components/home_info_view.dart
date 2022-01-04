@@ -52,7 +52,7 @@ class _HomeInfoViewState extends State<HomeInfoView> {
                         width: MediaQuery.of(context).size.width,
                         padding: const EdgeInsets.only(left: 32),
                         child: const Text(
-                          "Monitor",
+                          "Porject Info",
                           style: TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,

@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lgflutter_console/apptheme.dart';
@@ -47,7 +49,7 @@ class _BottomBarViewState extends State<BottomBarView>
                 child: Column(
                   children: [
                     SizedBox(
-                      height: 45,
+                      height: 64,
                       child: Padding(
                         padding:
                             const EdgeInsets.only(left: 8, right: 8, top: 4),
@@ -113,12 +115,14 @@ class _BottomBarViewState extends State<BottomBarView>
 class TabIconData {
   TabIconData({
     this.imagePath = '',
+    this.tabname = '',
     this.index = 0,
     this.isSelected = false,
     this.animationController,
   });
 
   String imagePath;
+  String tabname;
   bool isSelected;
   int index;
 
@@ -127,18 +131,21 @@ class TabIconData {
   static List<TabIconData> tabIconsList = <TabIconData>[
     TabIconData(
       imagePath: 'assets/images/infp.svg',
+      tabname: "info",
       index: 0,
       isSelected: true,
       animationController: null,
     ),
     TabIconData(
       imagePath: 'assets/images/monitor_host.svg',
+      tabname: "host",
       index: 1,
       isSelected: false,
       animationController: null,
     ),
     TabIconData(
       imagePath: 'assets/images/monitor_server.svg',
+      tabname: "server",
       index: 2,
       isSelected: false,
       animationController: null,
@@ -192,22 +199,23 @@ class _TabIconsState extends State<TabIcons> with TickerProviderStateMixin {
             }
           },
           child: IgnorePointer(
-            child: Stack(
-              alignment: AlignmentDirectional.center,
+            child: Column(
               children: <Widget>[
-                ScaleTransition(
-                  alignment: Alignment.center,
-                  scale: Tween<double>(begin: 0.88, end: 1.0).animate(
-                      CurvedAnimation(
-                          parent: widget.tabIconData!.animationController!,
-                          curve: const Interval(0.1, 1.0,
-                              curve: Curves.fastOutSlowIn))),
-                  child: SvgPicture.asset(
-                    widget.tabIconData!.imagePath,
-                    height: 200,
-                    color: widget.tabIconData!.isSelected!
-                        ? Colors.orange
-                        : Colors.black,
+                SvgPicture.asset(
+                  widget.tabIconData!.imagePath,
+                  height: 25,
+                  color: widget.tabIconData!.isSelected
+                      ? Colors.orange
+                      : Colors.black,
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Text(
+                  widget.tabIconData!.tabname,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
                   ),
                 ),
               ],
