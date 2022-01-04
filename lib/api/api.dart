@@ -62,4 +62,21 @@ class Api {
     var data = ApiResult.fromJson(response);
     return data;
   }
+
+  ///获取项目信息
+  static Future<ApiResult> getprojectinfoReq(
+      Map<String, dynamic>? params) async {
+    final response = await DioManager.instance
+        .post("/lego/console/getprojectinfo", data: params);
+    var data = ApiResult.fromJson(response);
+    return data;
+  }
+
+  ///获取主机信息
+  static Future<ApiResult> gethostinfoReq(Map<String, dynamic>? params) async {
+    final response = await DioManager.instance
+        .post("/lego/console/gethostinfo", data: params);
+    var data = ApiResult.fromJson(response);
+    return data;
+  }
 }

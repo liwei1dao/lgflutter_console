@@ -1,3 +1,4 @@
+import 'package:lgflutter_console/models/project_model.dart';
 import 'package:lgflutter_console/models/user_model.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -15,5 +16,8 @@ List<SingleChildWidget> independentServices = [
   ),
   ChangeNotifierProvider<UserModel>(
     create: (context) => UserModel(),
+  ),
+  ChangeNotifierProvider<PorjectModel>(
+    create: (context) => PorjectModel(),
   ),
 ];

@@ -10,10 +10,10 @@ enum DrawerIndex {
 class DrawerList {
   DrawerList({
     this.isAssetsImage = false,
+    this.imageName = '',
     this.labelName = '',
     this.icon,
     this.index,
-    this.imageName = '',
   });
 
   String labelName;
