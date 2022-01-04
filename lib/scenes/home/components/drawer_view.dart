@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../home_scene.dart';
 
 class HomeDrawer extends StatefulWidget {
@@ -93,7 +92,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   const Padding(
                     padding: EdgeInsets.only(top: 8, left: 4),
                     child: Text(
-                      'Chris Hemsworth',
+                      // context.watch<UserModel>().userData!.nickName!,
+                      "liwei1dao",
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: Colors.grey,

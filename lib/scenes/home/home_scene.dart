@@ -78,6 +78,8 @@ class _HomeSceneState extends State<HomeScene> with TickerProviderStateMixin {
       }
     });
     WidgetsBinding.instance?.addPostFrameCallback((_) => getInitState());
+    drawerIndex = DrawerIndex.home;
+    screenView = const HomeView();
     super.initState();
   }
 
@@ -124,7 +126,6 @@ class _HomeSceneState extends State<HomeScene> with TickerProviderStateMixin {
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
-                  //full-screen Width with widget.screenView
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -136,12 +137,10 @@ class _HomeSceneState extends State<HomeScene> with TickerProviderStateMixin {
                     ),
                     child: Stack(
                       children: <Widget>[
-                        //this IgnorePointer we use as touch(user Interface) widget.screen View, for example scrolloffset == 1 means drawer is close we just allow touching all widget.screen View
                         IgnorePointer(
                           ignoring: scrolloffset == 1 || false,
                           child: screenView,
                         ),
-                        //alternative touch(user Interface) for widget.screen, for example, drawer is close we need to tap on a few home screen area and close the drawer
                         if (scrolloffset == 1.0)
                           InkWell(
                             onTap: () {

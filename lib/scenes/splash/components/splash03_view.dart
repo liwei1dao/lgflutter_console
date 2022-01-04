@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lgflutter_console/generated/l10n.dart';
 
 class Splash03View extends StatefulWidget {
@@ -45,10 +46,10 @@ class _Splash03ViewState extends State<Splash03View> {
                 height: 175,
               ),
               SizedBox(
-                width: 250,
-                child: Image.asset(
-                  'assets/images/splash_03.png',
-                  fit: BoxFit.cover,
+                width: MediaQuery.of(context).size.width,
+                child: SvgPicture.asset(
+                  "assets/images/splash_03.svg",
+                  width: 250,
                 ),
               ),
               const SizedBox(

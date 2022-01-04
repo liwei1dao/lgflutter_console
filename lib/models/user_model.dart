@@ -30,8 +30,8 @@ class UserModel with ChangeNotifier {
   UserData? _userData;
   UserData? get userData => _userData;
 
-  setuserData(UserData _userData) {
-    _userData = _userData;
-    StorageManager.instance.saveString(kUserToken, _userData.token!);
+  setuserData(UserData userData) {
+    _userData = userData;
+    StorageManager.instance.saveString(kUserToken, _userData!.token!);
   }
 }
