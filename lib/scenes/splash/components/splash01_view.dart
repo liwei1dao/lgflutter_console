@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lgflutter_console/api/api.dart';
 import 'package:lgflutter_console/generated/l10n.dart';
+import 'package:lgflutter_console/managers/dio_manager.dart';
 import 'package:lgflutter_console/managers/router_manger.dart';
 import 'package:lgflutter_console/managers/storage_manager.dart';
 import 'package:lgflutter_console/models/user_model.dart';
@@ -74,25 +75,22 @@ class _Splash01ViewState extends State<Splash01View> {
               child: Consumer<UserModel>(
                 builder: (context, usermodel, child) {
                   return InkWell(
-                    onTap: () {
+                    onTap: () async {
                       if (StorageManager.instance
                               .getString(UserModel.kUserToken, "null") ==
                           "null") {
                         widget.animationController.animateTo(0.2);
                       } else {
-                        Api.getUserinfoReq({})
-                            .then(
-                              (data) => {
-                                showToast(data.message!),
-                                usermodel
-                                    .setuserData(UserData.fromJson(data.data)),
-                                Navigator.of(context)
-                                    .pushReplacementNamed(RouteName.home),
-                              },
-                            )
-                            .onError((error, stackTrace) => {
-                                  widget.animationController.animateTo(0.2),
-                                });
+                        ApiResponse<UserData> res =
+                            await Api.getUserinfoReq({});
+                        if (res.status != Status.COMPLETED) {
+                          usermodel.setuserData(res.data!);
+                          Navigator.of(context)
+                              .pushReplacementNamed(RouteName.home);
+                        } else {
+                          Navigator.of(context)
+                              .pushReplacementNamed(RouteName.login);
+                        }
                       }
                     },
                     child: Container(

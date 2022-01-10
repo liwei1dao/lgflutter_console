@@ -220,6 +220,23 @@ class DioManager {
   }
 }
 
+enum Status { COMPLETED, ERROR }
+
+class ApiResponse<T> {
+  Status status;
+  int? code;
+  String? message;
+  T? data;
+  AppException? exception;
+  ApiResponse.completed(this.data) : status = Status.COMPLETED;
+  ApiResponse.error(this.exception) : status = Status.ERROR;
+
+  @override
+  String toString() {
+    return "Status : $status \n Message : $exception \n Data : $data";
+  }
+}
+
 /// 自定义异常
 class AppException implements Exception {
   final String _message;

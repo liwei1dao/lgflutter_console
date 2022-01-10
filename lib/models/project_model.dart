@@ -1,11 +1,9 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 class PorjectData {
   String? projectName;
   String? projectDes;
-  Float? projectVersion;
+  double? projectVersion;
   String? projectTime;
   Map<String, String>? projectMember;
   PorjectData.fromJson(Map<String, dynamic> json) {
@@ -18,4 +16,11 @@ class PorjectData {
 }
 
 ///用户数据模块
-class PorjectModel with ChangeNotifier {}
+class PorjectModel with ChangeNotifier {
+  PorjectData? _projectData;
+  PorjectData? get projectData => _projectData;
+
+  setprojectData(PorjectData projectData) {
+    _projectData = projectData;
+  }
+}

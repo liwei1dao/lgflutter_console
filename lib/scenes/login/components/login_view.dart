@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lgflutter_console/api/api.dart';
+import 'package:lgflutter_console/managers/dio_manager.dart';
 import 'package:lgflutter_console/managers/router_manger.dart';
 import 'package:lgflutter_console/models/user_model.dart';
 import 'package:oktoast/oktoast.dart';
@@ -81,21 +82,22 @@ class _LoginViewState extends State<LoginView> {
                           color: const Color(0xff132137),
                         ),
                         child: InkWell(
-                          onTap: () {
-                            Api.loginByPasswordReq(
+                          onTap: () async {
+                            ApiResponse<UserData> res =
+                                await Api.loginByPasswordReq(
                               {
                                 "PhonOrEmail": _email.text,
                                 "Password": _password.text,
                               },
-                            ).then(
-                              (data) => {
-                                showToast(data.message!),
-                                usermodel
-                                    .setuserData(UserData.fromJson(data.data)),
-                                Navigator.of(context)
-                                    .pushReplacementNamed(RouteName.home),
-                              },
                             );
+                            if (res.status != Status.COMPLETED) {
+                              usermodel.setuserData(res.data!);
+                              Navigator.of(context)
+                                  .pushReplacementNamed(RouteName.home);
+                            } else {
+                              //异常提示
+                              showToast(res.exception!.getMessage());
+                            }
                           },
                           child: Padding(
                             padding:
