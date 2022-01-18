@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:connectivity/connectivity.dart';
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dio/adapter.dart';
@@ -56,7 +55,6 @@ class DioManager {
     _dio = Dio(options);
     _dio.interceptors.add(RequestInterceptor()); //自定义拦截
     _dio.interceptors.add(LogInterceptor()); //打开日志
-    _dio.interceptors.add(NetCacheInterceptor()); //缓存
 
     // 在调试模式下需要抓包调试，所以我们使用代理，并禁用HTTPS证书校验
     if (proxyEnable) {
@@ -174,10 +172,6 @@ class DioManager {
     CancelToken? cancelToken,
   }) async {
     Options requestOptions = options ?? Options();
-    // Map<String, dynamic> _authorization = getAuthorizationHeader();
-    // if (_authorization != null) {
-    //   requestOptions = requestOptions.merge(headers: _authorization);
-    // }
     var response = await _dio.patch(path,
         data: data,
         queryParameters: params,
@@ -276,55 +270,48 @@ class AppException implements Exception {
         }
       case DioErrorType.response:
         {
-          try {
-            int? errCode = error.response!.statusCode;
-            // String errMsg = error.response.statusMessage;
-            // return ErrorEntity(code: errCode, message: errMsg);
-            switch (errCode) {
-              case 400:
-                {
-                  return BadRequestException(errCode!, "请求语法错误");
-                }
-              case 401:
-                {
-                  return UnauthorisedException(errCode!, "没有权限");
-                }
-              case 403:
-                {
-                  return UnauthorisedException(errCode!, "服务器拒绝执行");
-                }
-              case 404:
-                {
-                  return UnauthorisedException(errCode!, "无法连接服务器");
-                }
-              case 405:
-                {
-                  return UnauthorisedException(errCode!, "请求方法被禁止");
-                }
-              case 500:
-                {
-                  return UnauthorisedException(errCode!, "服务器内部错误");
-                }
-              case 502:
-                {
-                  return UnauthorisedException(errCode!, "无效的请求");
-                }
-              case 503:
-                {
-                  return UnauthorisedException(errCode!, "服务器挂了");
-                }
-              case 505:
-                {
-                  return UnauthorisedException(errCode!, "不支持HTTP协议请求");
-                }
-              default:
-                {
-                  // return ErrorEntity(code: errCode, message: "未知错误");
-                  return AppException(errCode!, error.response!.statusMessage!);
-                }
-            }
-          } on Exception catch (_) {
-            return AppException(-1, "未知错误");
+          int? errCode = error.response?.statusCode;
+          switch (errCode) {
+            case 400:
+              {
+                return BadRequestException(errCode!, "请求语法错误");
+              }
+            case 401:
+              {
+                return UnauthorisedException(errCode!, "没有权限");
+              }
+            case 403:
+              {
+                return UnauthorisedException(errCode!, "服务器拒绝执行");
+              }
+            case 404:
+              {
+                return UnauthorisedException(errCode!, "无法连接服务器");
+              }
+            case 405:
+              {
+                return UnauthorisedException(errCode!, "请求方法被禁止");
+              }
+            case 500:
+              {
+                return UnauthorisedException(errCode!, "服务器内部错误");
+              }
+            case 502:
+              {
+                return UnauthorisedException(errCode!, "无效的请求");
+              }
+            case 503:
+              {
+                return UnauthorisedException(errCode!, "服务器挂了");
+              }
+            case 505:
+              {
+                return UnauthorisedException(errCode!, "不支持HTTP协议请求");
+              }
+            default:
+              {
+                return AppException(-1, error.message);
+              }
           }
         }
       default:
@@ -345,65 +332,8 @@ class UnauthorisedException extends AppException {
   UnauthorisedException(int code, String message) : super(code, message);
 }
 
-class MyDioSocketException extends SocketException {
-  @override
-  late String message;
-
-  MyDioSocketException(
-    message, {
-    osError,
-    address,
-    port,
-  }) : super(
-          message,
-          osError: osError,
-          address: address,
-          port: port,
-        );
-}
-
-/// 错误处理拦截器
-class ErrorInterceptor extends Interceptor {
-  // 是否有网
-  Future<bool> isConnected() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    return connectivityResult != ConnectivityResult.none;
-  }
-
-  @override
-  Future<void> onError(DioError err, ErrorInterceptorHandler errCb) async {
-    // 自定义一个socket实例，因为dio原生的实例，message属于是只读的
-    if (err.error is SocketException) {
-      err.error = MyDioSocketException(
-        err.message,
-        osError: err.error?.osError,
-        address: err.error?.address,
-        port: err.error?.port,
-      );
-    }
-    if (err.type == DioErrorType.other) {
-      bool isConnectNetWork = await isConnected();
-      if (!isConnectNetWork && err.error is MyDioSocketException) {
-        err.error.message = "当前网络不可用，请检查您的网络";
-      }
-    }
-    // error统一处理
-    AppException appException = AppException.create(err);
-    // 错误提示
-    debugPrint('DioError===: ${appException.toString()}');
-    err.error = appException;
-    return super.onError(err, errCb);
-  }
-}
-
 /// 请求处理拦截器
 class RequestInterceptor extends Interceptor {
-  // 是否有网
-  Future<bool> _isConnected() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    return connectivityResult != ConnectivityResult.none;
-  }
-
   ///签名
   String _getSign(Map parameter) {
     /// 存储所有key
@@ -427,8 +357,6 @@ class RequestInterceptor extends Interceptor {
   @override
   // ignore: avoid_renaming_method_parameters
   onRequest(options, handle) {
-    debugPrint(
-        '======================\n*** Request *** \nData:\n ${options.data.toString()} \nQuery:\n ${options.queryParameters.toString()} \n======================');
     String token = StorageManager.instance.getString('User-Token', "null");
     options.headers['X-Token'] = token;
     options.data['Sign'] = _getSign(options.data);
@@ -440,151 +368,24 @@ class RequestInterceptor extends Interceptor {
   onResponse(response, handle) {
     debugPrint(
         '======================\n*** Response *** \n${response.toString()}');
-    return super.onResponse(response, handle);
+    if (response.data != null &&
+        response.data is Map &&
+        response.data['code'] == 0) {
+      handle.next(response);
+    } else {
+      handle.reject(DioError(
+          requestOptions: response.requestOptions,
+          error: BadRequestException(
+              response.data['code'], response.data['message']),
+          response: response));
+    }
   }
 
   @override
   // ignore: avoid_renaming_method_parameters
   onError(err, handle) async {
-    if (err.error is SocketException) {
-      err.error = MyDioSocketException(
-        err.message,
-        osError: err.error?.osError,
-        address: err.error?.address,
-        port: err.error?.port,
-      );
-    }
-    if (err.type == DioErrorType.other) {
-      bool isConnectNetWork = await _isConnected();
-      if (!isConnectNetWork && err.error is MyDioSocketException) {
-        err.error.message = "当前网络不可用，请检查您的网络";
-      }
-    }
     AppException appException = AppException.create(err);
-    // 错误提示
-    debugPrint('DioError===: ${appException.toString()}');
     err.error = appException;
     return super.onError(err, handle);
-  }
-}
-
-class CacheObject {
-  CacheObject(this.response)
-      : timeStamp = DateTime.now().millisecondsSinceEpoch;
-  Response response;
-  int timeStamp;
-
-  @override
-  bool operator ==(other) {
-    return response.hashCode == other.hashCode;
-  }
-
-  @override
-  int get hashCode => response.realUri.hashCode;
-}
-
-class NetCacheInterceptor extends Interceptor {
-  var cache = <String, CacheObject>{};
-  @override
-  Future<void> onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
-    super.onRequest(options, handler);
-    if (!cacheEnable) handler.next(options);
-
-    // refresh标记是否是刷新缓存
-    bool refresh = options.extra["refresh"] == true;
-
-    // 是否磁盘缓存
-    bool cacheDisk = options.extra["cacheDisk"] == true;
-
-    // 如果刷新，先删除相关缓存
-    if (refresh) {
-      // 删除uri相同的内存缓存
-      delete(options.uri.toString());
-
-      // 删除磁盘缓存
-      if (cacheDisk) {
-        await StorageManager.instance.remove(options.uri.toString());
-      }
-
-      handler.next(options);
-    }
-
-    // get 请求，开启缓存
-    if (options.extra["noCache"] != true &&
-        options.method.toLowerCase() == 'get') {
-      String key = options.extra["cacheKey"] ?? options.uri.toString();
-
-      // 策略 1 内存缓存优先，2 然后才是磁盘缓存
-
-      // 1 内存缓存
-      var ob = cache[key];
-      if (ob != null) {
-        //若缓存未过期，则返回缓存内容
-        if ((DateTime.now().millisecondsSinceEpoch - ob.timeStamp) / 1000 <
-            cacheMaxage) {
-          handler.resolve(cache[key]!.response);
-        } else {
-          //若已过期则删除缓存，继续向服务器请求
-          cache.remove(key);
-        }
-      }
-
-      // 2 磁盘缓存
-      if (cacheDisk) {
-        var cacheData = StorageManager.instance.getJSON(key);
-        if (cacheData != null) {
-          handler.resolve(Response(
-            statusCode: 200,
-            data: cacheData,
-            requestOptions: options,
-          ));
-        }
-      }
-    }
-  }
-
-  @override
-  Future<void> onResponse(
-      Response response, ResponseInterceptorHandler handler) async {
-    super.onResponse(response, handler);
-    // 如果启用缓存，将返回结果保存到缓存
-    if (cacheEnable) {
-      await _saveCache(response);
-    }
-  }
-
-  @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
-    super.onError(err, handler);
-  }
-
-  void delete(String key) {
-    cache.remove(key);
-  }
-
-  Future<void> _saveCache(Response object) async {
-    RequestOptions options = object.requestOptions;
-
-    // 只缓存 get 的请求
-    if (options.extra["noCache"] != true &&
-        options.method.toLowerCase() == "get") {
-      // 策略：内存、磁盘都写缓存
-
-      // 缓存key
-      String key = options.extra["cacheKey"] ?? options.uri.toString();
-
-      // 磁盘缓存
-      if (options.extra["cacheDisk"] == true) {
-        await StorageManager.instance.saveJSON(key, object.data);
-      }
-
-      // 内存缓存
-      // 如果缓存数量超过最大数量限制，则先移除最早的一条记录
-      if (cache.length == cacheMaxcount) {
-        cache.remove(cache[cache.keys.first]);
-      }
-      cache[key] = CacheObject(object);
-    }
   }
 }

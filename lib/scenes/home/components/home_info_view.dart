@@ -34,50 +34,56 @@ class _HomeInfoViewState extends State<HomeInfoView> {
               future: getPorjectData(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  return Column(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 450,
-                        color: const Color(0xffF7EBE1),
-                        child: Stack(
-                          children: [
-                            Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: SvgPicture.asset(
-                                  "assets/images/home_001.svg",
-                                  height: 300,
+                  if (!snapshot.hasError) {
+                    return Column(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 450,
+                          color: const Color(0xffF7EBE1),
+                          child: Stack(
+                            children: [
+                              Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: SvgPicture.asset(
+                                    "assets/images/home_001.svg",
+                                    height: 300,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Center(
-                              heightFactor: 5,
-                              child: ConstrainedBox(
-                                constraints: const BoxConstraints(
-                                  maxWidth: 650,
-                                ),
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  padding: const EdgeInsets.only(left: 32),
-                                  child: const Text(
-                                    "Porject Info",
-                                    style: TextStyle(
-                                      fontSize: 26,
-                                      fontWeight: FontWeight.bold,
+                              Center(
+                                heightFactor: 5,
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 650,
+                                  ),
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    padding: const EdgeInsets.only(left: 32),
+                                    child: const Text(
+                                      "Porject Info",
+                                      style: TextStyle(
+                                        fontSize: 26,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      const Expanded(
-                        child: SizedBox(),
-                      ),
-                    ],
-                  );
+                        const Expanded(
+                          child: SizedBox(),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Center(
+                      child: Text(snapshot.error.toString()),
+                    );
+                  }
                 } else {
                   return const Center(
                     child: CircularProgressIndicator(),

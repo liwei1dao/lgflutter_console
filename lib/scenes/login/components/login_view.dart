@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lgflutter_console/api/api.dart';
 import 'package:lgflutter_console/managers/dio_manager.dart';
 import 'package:lgflutter_console/managers/router_manger.dart';
@@ -31,6 +32,16 @@ class _LoginViewState extends State<LoginView> {
         curve: Curves.easeOutSine,
       ),
     ));
+
+    final spinkit = SpinKitFadingCircle(
+      itemBuilder: (BuildContext context, int index) {
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            color: index.isEven ? Colors.white : Colors.green,
+          ),
+        );
+      },
+    );
     return SlideTransition(
       position: positionOutAnim,
       child: SingleChildScrollView(
@@ -83,6 +94,13 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         child: InkWell(
                           onTap: () async {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) => spinkit,
+                                fullscreenDialog: true,
+                              ),
+                            );
                             ApiResponse<UserData> res =
                                 await Api.loginByPasswordReq(
                               {
@@ -90,7 +108,8 @@ class _LoginViewState extends State<LoginView> {
                                 "Password": _password.text,
                               },
                             );
-                            if (res.status != Status.COMPLETED) {
+                            Navigator.pop(context);
+                            if (res.status == Status.COMPLETED) {
                               usermodel.setuserData(res.data!);
                               Navigator.of(context)
                                   .pushReplacementNamed(RouteName.home);
