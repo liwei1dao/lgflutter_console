@@ -6,6 +6,7 @@ import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lgflutter_console/managers/storage_manager.dart';
+import 'package:lgflutter_console/models/user_model.dart';
 
 String _signKey = "";
 // 是否启用代理
@@ -357,7 +358,8 @@ class RequestInterceptor extends Interceptor {
   @override
   // ignore: avoid_renaming_method_parameters
   onRequest(options, handle) {
-    String token = StorageManager.instance.getString('User-Token', "null");
+    String token =
+        StorageManager.instance.getString(UserModel.kUserToken, "null");
     options.headers['X-Token'] = token;
     options.data['Sign'] = _getSign(options.data);
     handle.next(options);

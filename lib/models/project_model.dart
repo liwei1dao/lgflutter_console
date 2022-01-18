@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class PorjectData {
   String? projectName;
   String? projectDes;
-  double? projectVersion;
+  num? projectVersion;
   String? projectTime;
-  Map<String, String>? projectMember;
+  Map<String, dynamic>? projectMember;
   PorjectData.fromJson(Map<String, dynamic> json) {
     projectName = json['ProjectName'];
     projectDes = json['ProjectDes'];

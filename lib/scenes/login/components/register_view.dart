@@ -120,7 +120,6 @@ class _RegisterViewState extends State<RegisterView> {
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     color: Colors.white,
-                                    fontSize: 18,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 )),
@@ -194,7 +193,7 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 5,
                     ),
                     TextButton(
                       child: const Text("to login"),
