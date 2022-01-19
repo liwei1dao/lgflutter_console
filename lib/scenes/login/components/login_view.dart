@@ -48,17 +48,21 @@ class _LoginViewState extends State<LoginView> {
       child: Stack(
         children: [
           fromview(),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: IconButton(
-              iconSize: 45,
-              color: Colors.grey,
-              icon: const Icon(Icons.settings),
-              onPressed: () {
-                widget.switchPage(2);
-              },
-            ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Align(
+                alignment: Alignment.bottomRight,
+                child: IconButton(
+                  iconSize: 45,
+                  color: Colors.grey,
+                  icon: const Icon(Icons.settings),
+                  onPressed: () {
+                    widget.switchPage(2);
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),

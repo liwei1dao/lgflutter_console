@@ -28,27 +28,27 @@ class _HomeInfoViewState extends State<HomeInfoView> {
     return Container(
       color: AppTheme.nearlyWhite,
       child: Consumer<PorjectModel>(builder: (context, prohectmodel, child) {
-        return Scaffold(
-          backgroundColor: Colors.transparent,
-          body: FutureBuilder<ApiResponse<PorjectData>>(
-              future: getPorjectData(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  ApiResponse<PorjectData> result = snapshot.data;
-                  if (result.status == Status.COMPLETED) {
-                    return infoview();
+        return prohectmodel.projectData != null
+            ? infoview(prohectmodel)
+            : FutureBuilder<ApiResponse<PorjectData>>(
+                future: getPorjectData(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    ApiResponse<PorjectData> result = snapshot.data;
+                    if (result.status == Status.COMPLETED) {
+                      prohectmodel.setprojectData(result.data!);
+                      return infoview(prohectmodel);
+                    } else {
+                      return Center(
+                        child: Text(result.toString()),
+                      );
+                    }
                   } else {
-                    return Center(
-                      child: Text(result.toString()),
+                    return const Center(
+                      child: CircularProgressIndicator(),
                     );
                   }
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              }),
-        );
+                });
       }),
     );
   }
@@ -58,39 +58,58 @@ class _HomeInfoViewState extends State<HomeInfoView> {
     return res;
   }
 
-  Widget infoview() {
+  Widget infoview(PorjectModel model) {
     return Column(
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          height: 450,
+          height: 400,
           color: const Color(0xffF7EBE1),
           child: Stack(
             children: [
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: SvgPicture.asset(
-                    "assets/images/home_001.svg",
-                    height: 300,
-                  ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: SvgPicture.asset(
+                  "assets/images/home_hostinfo.svg",
+                  height: 300,
                 ),
               ),
               Center(
-                heightFactor: 5,
+                heightFactor: 8,
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(
                     maxWidth: 650,
+                    maxHeight: 300,
                   ),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.only(left: 32),
-                    child: const Text(
-                      "Porject Info",
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 50),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 650,
+                          padding: const EdgeInsets.only(left: 32),
+                          child: const Text(
+                            "项目介绍",
+                            style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          width: 650,
+                          padding: const EdgeInsets.only(left: 32),
+                          child: Text(
+                            "项目 : " + model.projectData!.projectName!,
+                            style: const TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

@@ -74,7 +74,7 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                     ),
                     const SizedBox(
-                      height: 25,
+                      height: 8,
                     ),
                     Row(
                       children: [
@@ -128,7 +128,7 @@ class _RegisterViewState extends State<RegisterView> {
                       ],
                     ),
                     const SizedBox(
-                      height: 25,
+                      height: 8,
                     ),
                     TextField(
                       controller: _password,
@@ -139,7 +139,7 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                     ),
                     const SizedBox(
-                      height: 25,
+                      height: 8,
                     ),
                     TextField(
                       controller: _confirmpassword,
@@ -150,7 +150,7 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                     ),
                     const SizedBox(
-                      height: 25,
+                      height: 8,
                     ),
                     Container(
                       height: 36,
