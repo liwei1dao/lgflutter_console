@@ -117,10 +117,91 @@ class _HomeInfoViewState extends State<HomeInfoView> {
             ],
           ),
         ),
+        const SizedBox(
+          height: 10,
+        ),
+        ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 650,
+          ),
+          child: Container(
+            padding: const EdgeInsets.only(left: 10),
+            child: Text(
+              "项目描述 : " + model.projectData!.projectDes!,
+              style: const TextStyle(
+                fontSize: 18,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(20.0),
+          children: getprojectMember(model.projectData!.projectMember!),
+        ),
         const Expanded(
           child: SizedBox(),
         ),
       ],
     );
+  }
+
+  List<Widget> getprojectMember(Map<String, dynamic> members) {
+    List<Widget> widgets = [
+      const Text(
+        "项目成员表",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 20,
+        ),
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: const [
+          Text(
+            "姓名",
+            style: TextStyle(
+              fontSize: 18,
+            ),
+          ),
+          Text(
+            "职位",
+            style: TextStyle(
+              fontSize: 18,
+            ),
+          ),
+        ],
+      ),
+    ];
+    members.forEach((k, v) {
+      Map<String, dynamic> member = v;
+      widgets.add(Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            member["MemberName"],
+            style: const TextStyle(
+              fontSize: 18,
+            ),
+          ),
+          Text(
+            member["ProjectPosition"],
+            style: const TextStyle(
+              fontSize: 18,
+            ),
+          ),
+        ],
+      ));
+    });
+    widgets.add(const SizedBox(
+      height: 10,
+    ));
+    return widgets;
   }
 }
